@@ -1,13 +1,10 @@
-#from flask import Flask, render_template, request, jsonify, make_response
 from copy import copy, deepcopy
-#import json
-#app = Flask(__name__)
 
-class CSP: # full csp with vars, domain, and constraints
+class CSP: # full csp with variabless, domain, and constraints
 	def __init__(self, queens, doms, cons, rows):
-		self.queens = queens # list of all queens, the number of the queen is the column it will be placed in
-		self.doms = doms     # dict mapping queen to its domain, the domain is all the possible rows it can be placed in
-		self.cons = cons     # lisf of lists mapping queen to list of constraints (first item in list if the pair of queens)
+		self.queens = queens   # list of all queens, the number of the queen is the column it will be placed in
+		self.doms = doms       # dict mapping queen to its domain, the domain is all the possible rows it can be placed in
+		self.cons = cons       # lisf of lists mapping queen to list of constraints (first item in list if the pair of queens)
 		self.rows = rows       # the row the queen is assigned to
 	# for printing
 	def __str__(self):
@@ -16,17 +13,17 @@ class CSP: # full csp with vars, domain, and constraints
 		return "queens: " + str(self.queens) + "\ndomain: " + str(self.doms) + "\nconstraints " + str(self.cons) + "\nrow: " + rows
 
 
-# constructs a constraint satisfaction problem with the given number of queens
+# constructs a constraint satisfaction problem with the given number of queens (nqueens)
 def make_csp(nqueens):
-	queens = []
-	doms = {}
-	rows = {}
-	cons = []
+	queens = []  # list of queens,  numbered 1-n
+	doms = {}    # domains of the queens
+	rows = {}    # rows the queens will be placed in
+	cons = []    # list of constraints for each queen
 	for i in range(1, nqueens+1): # set list of queens
 		queens.append(i)
 	for i in range(1, nqueens+1): # set list of domains for each queen
 		doms.update({i : queens})
-	for i in range(1, nqueens+1): # set all row assignments to 0/no row assigned yet
+	for i in range(1, nqueens+1): # set all row assignments to 0 (no row assigned yet)
 		rows.update({i: 0})
 	for i in range(1, nqueens):   # find and set constraints for each pair of queens
 		for j in range(i+1, nqueens+1):
@@ -187,64 +184,3 @@ backtracking_search(csp)
 print csp.rows
 
 
-"""
-
-@app.route('/')
-def queens():
-	return render_template('index.html')
-
-
-@app.route('/8queens', methods=['POST'])
-def update8():
-	csp = make_csp(8)
-
-	if request.method == 'POST':
-		inp = request.get_json()
-		if inp != None:
-			#dom = inp.items()
-			print(inp.values()[0][1])
-			q = int(inp.values()[0][0])
-			v = int(inp.values()[0][1])
-			csp.doms[q] = [v]
-			backtracking_search(csp)
-			print csp.rows
-			res = make_response(json.dumps(csp.rows), 401)
-			#print csp.doms
-			return res
-	else:
-		inp = "11x"
-		csp.doms[1] = [1]
-		backtracking_search(csp)
-		res = 100
-
-	return render_template('index8.html', inp=inp, solution=backtracking_search(csp))
-
-
-@app.route('/12queens', methods=['GET', 'POST'])
-def run_csp12():
-	csp = make_csp(12)
-	backtracking_search(csp)
-	vals = list(csp.rows.values())
-	solution = []
-	for i in vals:
-		solution.append(i[0])
-	solution=json.dumps(solution)
-	return render_template('index12.html', solution=solution) + str(solution)
-
-
-@app.route('/16queens', methods=['GET', 'POST'])
-def run_csp16():
-	csp = make_csp(16)
-	backtracking_search(csp)
-	vals = list(csp.rows.values())
-	solution = []
-	for i in vals:
-		solution.append(i[0])
-	#a = request.args.get('nqueens', 0, type=int)
-	return render_template('index16.html', solution=solution) + str(solution)
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
-"""
