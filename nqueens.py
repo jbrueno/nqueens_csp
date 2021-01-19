@@ -63,27 +63,18 @@ def revise(csp, q1, q2):
 	cons = copy(csp.cons[index])
 	cons.pop(0) # remove the list that contains the pair of queens
 
-	what = []
+	c = []
 	for i in cons:
 		if [i[0]] == d1:
-			what.append(i)
+			c.append(i)
 
-	#print "what: ", what
-
-	for j in what: # for each of the constraints between the two queens
-		#if j[1] not in d2:
-		#	revised = False
-		#else:
+	for j in c: # for each of the constraints between the two queens
 		if j[1] in d2:
 			if j[1] not in new_d2:
 				new_d2.append(j[1])
 				revised = True
-
-
 	csp.doms[q2] = new_d2 # modify q1's domain
-
 	return revised
-
 
 
 def ac_3(csp, q1):
@@ -114,9 +105,8 @@ def ac_3(csp, q1):
 		elif len(j) == 1:
 			if csp.doms[i] not in csp.rows.values():
 				csp.rows[i] = csp.doms[i]
-				#return True
-
 	return True
+
 
 def min_rem_vals(csp):
 	check = []  # list of queens who are unassigned/no row
@@ -155,14 +145,12 @@ def backtracking_search(csp):
 
 def backtrack(csp, index):
 	mod_csp = deepcopy(csp)
-
 	if 0 not in mod_csp.rows.values():
 		csp.rows = mod_csp.rows
 		#print mod_csp.rows
 		return True
 
 	domain = copy(mod_csp.doms[index])
-	#random.shuffle(domain)
 
 	for value in domain:
 		mod_csp = deepcopy(csp)
